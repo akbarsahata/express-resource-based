@@ -33,6 +33,17 @@ app.use('/test', (req, res, next) => {
   res.status(200).send(`server is running on ${(PORT ? PORT : 3000)}`)
 })
 
+// clean up database
+// DANGER! stupid hack!
+app.use('/clean-database', async (req, res, next) => {
+   try {
+     await mongoose.model('User').deleteMany({}).exec()
+   } catch (error) {
+     return next(error)
+   }
+   res.status(200).send('database clean up finished!')
+})
+
 // generic error handling
 app.use((error, req, res, next) => {
   console.error(error)
